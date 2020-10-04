@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+</head>
+<body>
+<h1>Home</h1>
+<p th:text="${user.username}"></p>
+<form th:action="@{/start-chat}">
+    <input type="hidden" name="username" th:value="${user.username}">
+    <button type="submit">Start Chat</button>
+</form>
+</body>
+</html>
