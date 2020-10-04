@@ -10,6 +10,8 @@ import java.util.List;
 public class UserService {
     private static List<User> users;
 
+    private static List<String> onlineUsers;
+
     static {
         users = new ArrayList<>();
         users.add(new User("tuyen","12345","https://scontent.fhan2-4.fna.fbcdn.net/v/t1.0-9/118051414_2791844877808045_680768740254589378_n.jpg?_nc_cat=105&_nc_sid=09cbfe&_nc_ohc=CWKp-T2T3XYAX-NhMNy&_nc_ht=scontent.fhan2-4.fna&oh=56f7d44fdc210518f3cee98193f0855e&oe=5F9D8788"));
@@ -18,6 +20,8 @@ public class UserService {
         users.add(new User("ngoc","12345","https://thuthuatnhanh.com/wp-content/uploads/2020/01/girl-xinh.jpg"));
         users.add(new User("hoa","12345","https://mcnewsmd1.keeng.net/netnews/archive/images/2020041117/tinngan_051138_244543106_0wap_320.jpg"));
         users.add(new User("nhung","12345","https://znews-photo.zadn.vn/w660/Uploaded/ofh_btgazspf/2019_10_25/66643097_161307101670951_7404188023044511528_n_1.jpg"));
+
+        onlineUsers = new ArrayList<>();
     }
 
     public List<User> userList(){
@@ -43,5 +47,13 @@ public class UserService {
             }
         }
         return user;
+    }
+
+    public List<String> getOnlineUsers(){
+        return onlineUsers;
+    }
+
+    public void addOnlineUser(String username){
+        onlineUsers.add(username);
     }
 }

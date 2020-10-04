@@ -36,4 +36,14 @@ public class MessageController {
             simpMessagingTemplate.convertAndSend("/topic/messages/" + to, message);
         }
     }
+
+    @MessageMapping("/notify/{username}")
+    public void notifyOnline(@DestinationVariable String username,User user){
+        List<String> onlineUsers = userService.getOnlineUsers();
+        for (String onlineUser : onlineUsers){
+            if(onlineUser.equals(username)) continue;
+            System.out.println(username + " is online");
+            simpMessagingTemplate.convertAndSend("/topic/online/" + onlineUser, user);
+        }
+    }
 }

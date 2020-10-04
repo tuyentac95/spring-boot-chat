@@ -26,8 +26,46 @@ $('.contacts li').click(function(e) {
 
         $chatHistoryList.html('');
     }
-
 });
+
+function subcribeToGetMsg(username) {
+    stompClient.subscribe("/topic/messages/" + username, function (response) {
+        let data = JSON.parse(response.body);
+        console.log('From ' + data.from + ': ' + data.message);
+        let templateResponse = Handlebars.compile($("#receive-message-template").html());
+        let contextResponse = {
+            response: data.message,
+            time: getCurrentTime(),
+            userName: data.from
+        };
+        $chatHistoryList.append(templateResponse(contextResponse));
+        let receive_msg_image = selectedUserImg.replace('rounded-circle user_img', 'rounded-circle user_img_msg');
+        $('.receive_msg_img').html(receive_msg_image);
+        $chatHistory.scrollTop($chatHistory[0].scrollHeight);
+    });
+}
+
+function notifyOnline(username) {
+    stompClient.send('/app/notify/' + username, {}, JSON.stringify({
+        username: username
+    }));
+}
+
+function subscribeOnline(username) {
+    stompClient.subscribe("/topic/online/" + username, function (response) {
+        let data = JSON.parse(response.body);
+        let user_list = document.querySelectorAll('.contacts li');
+        for(let i=0; i < user_list.length; i++){
+            let name = user_list[i].querySelector('.username').textContent;
+            if(name == data.username) {
+                console.log(name + ' is online');
+                user_list[i].querySelector('.user_status').innerHTML = name + ' is online';
+                user_list[i].querySelector('.status_icon').innerHTML = '<span class="online_icon"></span>';
+                break;
+            }
+        }
+    })
+}
 
 function connectToChat(username) {
     console.log(username + " connecting to chat...");
@@ -35,20 +73,10 @@ function connectToChat(username) {
     stompClient = Stomp.over(socket);
     stompClient.connect({},function (frame){
        console.log("connected to: " + frame);
-       stompClient.subscribe("/topic/messages/" + username, function (response){
-          let data = JSON.parse(response.body);
-          console.log('From ' + data.from + ': ' + data.message);
-          let templateResponse = Handlebars.compile($("#receive-message-template").html());
-          let contextResponse = {
-              response: data.message,
-              time: getCurrentTime(),
-              userName: data.from
-          };
-          $chatHistoryList.append(templateResponse(contextResponse));
-          let receive_msg_image = selectedUserImg.replace('rounded-circle user_img','rounded-circle user_img_msg');
-          $('.receive_msg_img').html(receive_msg_image);
-          $chatHistory.scrollTop($chatHistory[0].scrollHeight);
-       });
+       subcribeToGetMsg(username);
+       notifyOnline(username);
+       subscribeOnline(username);
+
     });
 }
 
