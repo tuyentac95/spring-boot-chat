@@ -40,7 +40,8 @@ public class AppController {
     @GetMapping("/start-chat")
     public ModelAndView startChat(@RequestParam("username") String username){
         ModelAndView modelAndView = new ModelAndView("/demo-chat");
-        modelAndView.addObject("username",username);
+        User user = userService.findUserByName(username);
+        modelAndView.addObject("user",user);
         List<User> chattingList = userService.chattingList(username);
         modelAndView.addObject("chattingList",chattingList);
         return modelAndView;

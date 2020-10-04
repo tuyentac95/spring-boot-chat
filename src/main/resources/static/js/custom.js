@@ -1,7 +1,7 @@
 let $button;
 let $textarea;
 let username;
-// let $chatHistory;
+let $chatHistory;
 let $chatHistoryList;
 
 function init() {
@@ -18,9 +18,8 @@ function bindEvents() {
 function cacheDOM(){
     $button = $('#sendBtn');
     $textarea = $('#message-to-send');
-    // $chatHistory = $('.chat-history');
-    // $chatHistoryList = $chatHistory.find('ul');
-    $chatHistoryList = $('.msg_card_body');
+    $chatHistory = $('.msg_card_body');
+    $chatHistoryList = $chatHistory.find('ul');
 }
 
 function addMessage() {
@@ -38,6 +37,7 @@ function sendMessage(message) {
         };
         $chatHistoryList.append(template(context));
         $textarea.val('');
+        $chatHistory.scrollTop($chatHistory[0].scrollHeight);
     }
 }
 

@@ -33,4 +33,15 @@ public class UserService {
         }
         return chattingList;
     }
+
+    public User findUserByName(String username) {
+        User user = null;
+        List<User> userList = userList();
+        for(User u : userList){
+            if(u.getUsername().equals(username)){
+                user = u;
+            }
+        }
+        return user;
+    }
 }

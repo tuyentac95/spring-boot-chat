@@ -1,26 +1,32 @@
 const url = 'http://localhost:8080';
 let stompClient;
 let selectedUser;
+let selectedUserImg;
 
+// show menu of on chatting user
 $(document).ready(function(){
     $('#action_menu_btn').click(function(){
         $('.action_menu').toggle();
     });
 });
 
+// select user to chat
 $('.contacts li').click(function(e) {
-
     $('.contacts li').removeClass('active');
 
     var $this = $(this);
     if (!$this.hasClass('active')) {
         $this.addClass('active');
+
         selectedUser = $this.find('.username').text();
         $('#on-chat-username').html('Chat with ' + selectedUser);
-        let getUserImage = $this.find('.user_image').html();
-        $('#on-chat-user-image').html(getUserImage);
+
+        selectedUserImg = $this.find('.user_image').html();
+        $('#on-chat-user-image').html(selectedUserImg);
+
+        $chatHistoryList.html('');
     }
-    //e.preventDefault();
+
 });
 
 function connectToChat(username) {
@@ -32,14 +38,16 @@ function connectToChat(username) {
        stompClient.subscribe("/topic/messages/" + username, function (response){
           let data = JSON.parse(response.body);
           console.log('From ' + data.from + ': ' + data.message);
-           let templateResponse = Handlebars.compile($("#receive-message-template").html());
-           let contextResponse = {
-               response: data.message,
-               time: getCurrentTime(),
-               userName: data.from
-
-           };
-           $chatHistoryList.append(templateResponse(contextResponse));
+          let templateResponse = Handlebars.compile($("#receive-message-template").html());
+          let contextResponse = {
+              response: data.message,
+              time: getCurrentTime(),
+              userName: data.from
+          };
+          $chatHistoryList.append(templateResponse(contextResponse));
+          let receive_msg_image = selectedUserImg.replace('rounded-circle user_img','rounded-circle user_img_msg');
+          $('.receive_msg_img').html(receive_msg_image);
+          $chatHistory.scrollTop($chatHistory[0].scrollHeight);
        });
     });
 }
@@ -62,11 +70,5 @@ function registration(){
         }
     });
 }
-
-// function selectUser(){
-//     selectedUser = document.getElementById("select").value;
-//     console.log("selected user: " + selectedUser);
-//     document.getElementById("headline").innerHTML = 'Chat with ' + selectedUser;
-// }
 
 init();

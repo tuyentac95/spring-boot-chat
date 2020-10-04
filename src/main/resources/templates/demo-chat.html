@@ -15,6 +15,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/3.0.0/handlebars.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button/dist/index.min.js"></script>
 <!--    <link th:src="@{/css/style2.css}" rel="stylesheet"/>-->
     <style>
         body,html{
@@ -246,7 +247,7 @@
     </style>
 </head>
 <body>
-<input type="hidden" th:value="${username}" id="user"/>
+<input type="hidden" th:value="${user.username}" id="user"/>
 <div class="container-fluid h-100">
     <div class="row justify-content-center h-100">
 <!--        list user-->
@@ -376,7 +377,9 @@
 
 <!--                chat body-->
                 <div class="card-body msg_card_body">
+                    <ul style="list-style-type:none; padding-inline-start: 0;">
 
+                    </ul>
                 </div>
 <!--                end of chat body-->
 
@@ -384,7 +387,7 @@
                 <div class="card-footer">
                     <div class="input-group">
                         <div class="input-group-append">
-                            <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i></span>
+                            <span class="input-group-text attach_btn"><i class="fas fa-paperclip"></i>&nbsp;&nbsp;<i class="far fa-smile"></i></span>
                         </div>
                         <textarea id="message-to-send" name="" class="form-control type_msg" placeholder="Type your message..."></textarea>
                         <div class="input-group-append">
@@ -401,31 +404,32 @@
 
 <!--send message template-->
 <script id="send-message-template" type="text/x-handlebars-template">
-    <div class="d-flex justify-content-end mb-4">
+    <li><div class="d-flex justify-content-end mb-4">
         <div class="msg_cotainer_send">
             {{messageOutput}}
             <span class="msg_time_send">{{time}}, Today</span>
         </div>
-        <div class="img_cont_msg">
-            <img src="https://scontent.fhan2-4.fna.fbcdn.net/v/t1.0-9/118051414_2791844877808045_680768740254589378_n.jpg?_nc_cat=105&_nc_sid=09cbfe&_nc_ohc=CWKp-T2T3XYAX-NhMNy&_nc_ht=scontent.fhan2-4.fna&oh=56f7d44fdc210518f3cee98193f0855e&oe=5F9D8788" class="rounded-circle user_img_msg">
+        <div class="img_cont_msg send_msg_img">
+            <img th:src="${user.image}" class="rounded-circle user_img_msg">
         </div>
-    </div>
+    </div></li>
 </script> <!--end send message template-->
 
 <!--receive message template-->
 <script id="receive-message-template" type="text/x-handlebars-template">
-    <div class="d-flex justify-content-start mb-4">
-        <div class="img_cont_msg">
-            <img src="https://scontent.fhan2-4.fna.fbcdn.net/v/t1.0-9/120453842_389394409135898_6677555786255134881_o.jpg?_nc_cat=110&_nc_sid=09cbfe&_nc_ohc=7CVB0kfRRJ4AX_l3NT-&_nc_ht=scontent.fhan2-4.fna&oh=3612bc12686d49f23a596af57e806869&oe=5F9EE88C" class="rounded-circle user_img_msg">
+    <li><div class="d-flex justify-content-start mb-4">
+        <div class="img_cont_msg receive_msg_img">
+
         </div>
         <div class="msg_cotainer">
             {{response}}
             <span class="msg_time">{{time}}, Today</span>
         </div>
-    </div>
+    </div></li>
 </script><!--end of receive message template-->
 
 <script type="text/javascript" th:src="@{/js/custom.js}"></script>
 <script type="text/javascript" th:src="@{/js/chat.js}"></script>
+<script type="text/javascript" th:src="@{/js/emoji.js}"></script>
 </body>
 </html>
