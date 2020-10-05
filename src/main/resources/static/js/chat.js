@@ -18,6 +18,8 @@ $('.contacts li').click(function(e) {
     if (!$this.hasClass('active')) {
         $this.addClass('active');
 
+        $this.find('.notify').html('');
+
         selectedUser = $this.find('.username').text();
         $('#on-chat-username').html('Chat with ' + selectedUser);
 
@@ -32,16 +34,28 @@ function subcribeToGetMsg(username) {
     stompClient.subscribe("/topic/messages/" + username, function (response) {
         let data = JSON.parse(response.body);
         console.log('From ' + data.from + ': ' + data.message);
-        let templateResponse = Handlebars.compile($("#receive-message-template").html());
-        let contextResponse = {
-            response: data.message,
-            time: getCurrentTime(),
-            userName: data.from
-        };
-        $chatHistoryList.append(templateResponse(contextResponse));
-        let receive_msg_image = selectedUserImg.replace('rounded-circle user_img', 'rounded-circle user_img_msg');
-        $('.receive_msg_img').html(receive_msg_image);
-        $chatHistory.scrollTop($chatHistory[0].scrollHeight);
+
+        if(data.from == selectedUser){
+            let templateResponse = Handlebars.compile($("#receive-message-template").html());
+            let contextResponse = {
+                response: data.message,
+                time: getCurrentTime(),
+                userName: data.from
+            };
+            $chatHistoryList.append(templateResponse(contextResponse));
+            let receive_msg_image = selectedUserImg.replace('rounded-circle user_img', 'rounded-circle user_img_msg');
+            $('.receive_msg_img').html(receive_msg_image);
+            $chatHistory.scrollTop($chatHistory[0].scrollHeight);
+        } else {
+            let user_list = document.querySelectorAll('.contacts li');
+            for(let i=0; i < user_list.length; i++){
+                let name = user_list[i].querySelector('.username');
+                if(name.textContent == data.from) {
+                    user_list[i].querySelector('.notify').innerHTML = ' +1';
+                    break;
+                }
+            }
+        }
     });
 }
 
